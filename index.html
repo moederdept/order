@@ -21,6 +21,7 @@
         .btn-po { background: #e40616; color: white; }
         .btn-po:active { background: #c20513; }
         
+        /* Tombol Mati / Disabled */
         .btn-service:disabled { background: #e0e0e0 !important; color: #999 !important; cursor: not-allowed; box-shadow: none; }
         .notif-closed { font-size: 11px; color: #e40616; font-weight: bold; margin-bottom: 5px; display: block; }
 
@@ -64,7 +65,7 @@
 
     <div class="header">
         <h1>MOEDER</h1>
-        <p>coffee & pastry departement</p>
+        <p>Silakan pilih jenis layanan</p>
     </div>
 
     <!-- TAMPILAN 1: PILIH LAYANAN (HOME) -->
@@ -72,8 +73,9 @@
         <h2>Pilih Metode Pesanan</h2>
         
         <div id="wrapper-instant">
-            <span id="notif-instant" class="notif-closed" style="display: none;">Layanan tidak tersedia (Buka pukul 17.00 - 01.00 WIB)</span>
-            <button id="btn-instant-delivery" class="btn-service btn-instant" onclick="pilihLayanan('Instant Delivery')">Instant Delivery</button>
+            <!-- Default teks awal: Menutup akses sampai diverifikasi sistem -->
+            <span id="notif-instant" class="notif-closed">Memeriksa jadwal operasional...</span>
+            <button id="btn-instant-delivery" class="btn-service btn-instant" onclick="pilihLayanan('Instant Delivery')" disabled>Instant Delivery</button>
         </div>
 
         <button class="btn-service btn-po" onclick="pilihLayanan('Pre-order')">Pre-order</button>
@@ -97,7 +99,7 @@
                 </div>
             </div>
             <div class="comic-counter" id="comicCounter">( 1 / 2 )</div>
-            <div class="comic-nav-hint">Geser ke samping untuk membaca komik</div>
+            <div class="comic-nav-hint">Geser ke samping</div>
         </div>
 
         <!-- PRODUK 1: PISTACHIO -->
@@ -164,13 +166,34 @@
             if (!isOpen) {
                 btnInstant.disabled = true;
                 notifInstant.style.display = 'block';
+                notifInstant.innerText = "Layanan tidak tersedia (Buka pukul 17.00 - 01.00 WIB)";
             } else {
                 btnInstant.disabled = false;
                 notifInstant.style.display = 'none';
             }
         }
 
-        function cekWaktuLokal() {
+        // Cek waktu langsung dari Server Dunia (World Time API via HTTPS)
+        async function cekWaktuServer() {
+            try {
+                // Menggunakan WorldTimeAPI zona Jakarta
+                const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Jakarta', { cache: 'no-store' });
+                if (response.ok) {
+                    const data = await response.json();
+                    const datetime = new Date(data.datetime);
+                    const jamWIB = datetime.getHours();
+
+                    // Buka jika jam 17.00 s.d 00.59
+                    const isOpen = (jamWIB >= 17 || jamWIB < 1);
+                    setStatusInstant(isOpen);
+                    return;
+                }
+            } catch (err) {
+                // Jika jaringan internet gagal/blocked, gunakan waktu lokal perangkat sebagai cadangan pengaman
+                console.log("API server waktu gagal, beralih ke waktu perangkat.");
+            }
+
+            // Cadangan: Cek jam lokal perangkat jika internet API gagal
             const d = new Date();
             const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
             const wibDate = new Date(utc + (3600000 * 7));
@@ -179,34 +202,16 @@
             setStatusInstant(isOpen);
         }
 
-        async function cekWaktuInternet() {
-            try {
-                const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Jakarta');
-                if (response.ok) {
-                    const data = await response.json();
-                    const datetime = new Date(data.datetime);
-                    const jamWIB = datetime.getHours();
-                    const isOpen = (jamWIB >= 17 || jamWIB < 1);
-                    setStatusInstant(isOpen);
-                }
-            } catch (err) {
-                console.log("Cek waktu internet gagal, menggunakan sistem cadangan.");
-            }
-        }
-
         window.onload = function() {
-            cekWaktuLokal();
-            cekWaktuInternet();
+            cekWaktuServer();
         };
 
-        // Indikator Halaman Komik Bergeser
         function updateComicCounter() {
             const slider = document.getElementById('comicSlider');
             const counter = document.getElementById('comicCounter');
             const slideWidth = slider.clientWidth;
             const scrollPos = slider.scrollLeft;
             
-            // Hitung halaman aktif berdasarkan posisi geser
             const halamanAktif = Math.round(scrollPos / slideWidth) + 1;
             counter.innerText = `( ${halamanAktif} / 2 )`;
         }
