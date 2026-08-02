@@ -7,10 +7,29 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f8f9fa; padding: 15px; max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
+        
         .header { text-align: center; margin-bottom: 20px; padding: 20px 15px; background: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .header h1 { font-size: 22px; color: #222; margin-bottom: 5px; }
         .header p { color: #666; font-size: 13px; }
+
+        /* HALAMAN UTAMA: PILIHAN LAYANAN */
+        #home-screen { text-align: center; padding: 20px 0; }
+        #home-screen h2 { font-size: 18px; color: #333; margin-bottom: 20px; }
+        .btn-service { display: block; width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: center; border: none; box-shadow: 0 2px 6px rgba(0,0,0,0.08); transition: 0.2s; }
+        .btn-instant { background: #222; color: white; }
+        .btn-instant:active { background: #444; }
+        .btn-po { background: #e40616; color: white; }
+        .btn-po:active { background: #c20513; }
         
+        /* Tombol Mati / Disabled */
+        .btn-service:disabled { background: #e0e0e0 !important; color: #999 !important; cursor: not-allowed; box-shadow: none; }
+        .notif-closed { font-size: 11px; color: #e40616; font-weight: bold; margin-bottom: 5px; display: block; }
+
+        /* HALAMAN KATALOG & KERANJANG */
+        #catalog-screen { display: none; }
+        .badge-mode { background: #eef2f7; color: #333; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #dcdcdc; }
+        .btn-back { background: none; border: none; color: #0066cc; font-size: 12px; cursor: pointer; font-weight: bold; }
+
         .card { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
         .card img { width: 100%; border-radius: 8px; object-fit: cover; aspect-ratio: 1/1; background: #e9ecef; margin-bottom: 12px; }
         .card h3 { font-size: 18px; color: #333; margin-bottom: 4px; }
@@ -19,9 +38,7 @@
         .card select, .card input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background-color: #fff; }
         
         .btn-add { background: #222; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; text-align: center; }
-        .btn-add:active { background: #444; }
-
-        /* REKAP PESANAN / KERANJANG */
+        
         .cart-section { background: #ffffff; border-radius: 12px; padding: 15px; margin-top: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e40616; }
         .cart-section h2 { font-size: 16px; margin-bottom: 10px; color: #222; border-bottom: 1px solid #eee; padding-bottom: 8px; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 8px 0; border-bottom: 1px dashed #eee; }
@@ -39,63 +56,129 @@
 
     <div class="header">
         <h1>Katalog Moeder</h1>
-        <p>Pilih menu, tambah ke pesanan, dan checkout via WA</p>
+        <p>Silakan pilih jenis layanan pesanan kamu</p>
     </div>
 
-    <!-- PRODUK 1: PISTACHIO -->
-    <div class="card">
-        <img src="pistachio.jpg" alt="Pistachio" onerror="this.src='https://via.placeholder.com/400x400?text=Pistachio'">
-        <h3>Pistachio</h3>
-        <p class="price">Rp 15.000</p>
+    <!-- TAMPILAN 1: PILIH LAYANAN (HOME) -->
+    <div id="home-screen">
+        <h2>Pilih Metode Pesanan</h2>
         
-        <label for="variant-pistachio">Varian / Sugar:</label>
-        <select id="variant-pistachio">
-            <option value="Normal Sugar">Normal Sugar</option>
-            <option value="Less Sugar">Less Sugar</option>
-        </select>
-
-        <label for="qty-pistachio">Jumlah:</label>
-        <input type="number" id="qty-pistachio" value="1" min="1">
-
-        <button class="btn-add" onclick="tambahKeKeranjang('Pistachio', 'variant-pistachio', 'qty-pistachio', 15000)">+ Tambah Pesanan</button>
-    </div>
-
-    <!-- PRODUK 2: BUTTERSCOTCH -->
-    <div class="card">
-        <img src="butterscotch.jpg" alt="Butterscotch" onerror="this.src='https://via.placeholder.com/400x400?text=Butterscotch'">
-        <h3>Butterscotch</h3>
-        <p class="price">Rp 15.000</p>
-        
-        <label for="variant-butterscotch">Varian / Sugar:</label>
-        <select id="variant-butterscotch">
-            <option value="Normal Sugar">Normal Sugar</option>
-            <option value="Less Sugar">Less Sugar</option>
-        </select>
-
-        <label for="qty-butterscotch">Jumlah:</label>
-        <input type="number" id="qty-butterscotch" value="1" min="1">
-
-        <button class="btn-add" onclick="tambahKeKeranjang('Butterscotch', 'variant-butterscotch', 'qty-butterscotch', 15000)">+ Tambah Pesanan</button>
-    </div>
-
-    <!-- KOTAK REKAP PESANAN (KERANJANG) -->
-    <div class="cart-section">
-        <h2>Daftar Pesanan Kamu</h2>
-        <div id="cart-list">
-            <p style="font-size: 12px; color: #999; text-align: center; padding: 10px 0;">Belum ada menu yang ditambahkan.</p>
-        </div>
-        
-        <div class="total-box">
-            <span>Total:</span>
-            <span id="cart-total">Rp 0</span>
+        <!-- Tombol Instant Delivery -->
+        <div id="wrapper-instant">
+            <span id="notif-instant" class="notif-closed" style="display: none;">Layanan tidak tersedia (Buka pukul 17.00 - 01.00 WIB)</span>
+            <button id="btn-instant-delivery" class="btn-service btn-instant" onclick="pilihLayanan('Instant Delivery')">⚡ Instant Delivery</button>
         </div>
 
-        <button id="btn-kirim-wa" class="btn-wa" onclick="kirimSemuaPesananWA()" disabled>Pesan Sekarang via WhatsApp</button>
+        <!-- Tombol Pre-order -->
+        <button class="btn-service btn-po" onclick="pilihLayanan('Pre-order')">📦 Pre-order</button>
+    </div>
+
+    <!-- TAMPILAN 2: KATALOG & KERANJANG -->
+    <div id="catalog-screen">
+        <div class="badge-mode">
+            <span id="txt-mode-aktif">Mode: -</span>
+            <button class="btn-back" onclick="kembaliKeHome()">[ Ganti Layanan ]</button>
+        </div>
+
+        <!-- PRODUK 1: PISTACHIO -->
+        <div class="card">
+            <img src="pistachio.jpg" alt="Pistachio" onerror="this.src='https://via.placeholder.com/400x400?text=Pistachio'">
+            <h3>Pistachio</h3>
+            <p class="price">Rp 15.000</p>
+            
+            <label for="variant-pistachio">Varian / Sugar:</label>
+            <select id="variant-pistachio">
+                <option value="Normal Sugar">Normal Sugar</option>
+                <option value="Less Sugar">Less Sugar</option>
+            </select>
+
+            <label for="qty-pistachio">Jumlah:</label>
+            <input type="number" id="qty-pistachio" value="1" min="1">
+
+            <button class="btn-add" onclick="tambahKeKeranjang('Pistachio', 'variant-pistachio', 'qty-pistachio', 15000)">+ Tambah Pesanan</button>
+        </div>
+
+        <!-- PRODUK 2: BUTTERSCOTCH -->
+        <div class="card">
+            <img src="butterscotch.jpg" alt="Butterscotch" onerror="this.src='https://via.placeholder.com/400x400?text=Butterscotch'">
+            <h3>Butterscotch</h3>
+            <p class="price">Rp 15.000</p>
+            
+            <label for="variant-butterscotch">Varian / Sugar:</label>
+            <select id="variant-butterscotch">
+                <option value="Normal Sugar">Normal Sugar</option>
+                <option value="Less Sugar">Less Sugar</option>
+            </select>
+
+            <label for="qty-butterscotch">Jumlah:</label>
+            <input type="number" id="qty-butterscotch" value="1" min="1">
+
+            <button class="btn-add" onclick="tambahKeKeranjang('Butterscotch', 'variant-butterscotch', 'qty-butterscotch', 15000)">+ Tambah Pesanan</button>
+        </div>
+
+        <!-- KERANJANG -->
+        <div class="cart-section">
+            <h2>Daftar Pesanan Kamu</h2>
+            <div id="cart-list">
+                <p style="font-size: 12px; color: #999; text-align: center; padding: 10px 0;">Belum ada menu yang ditambahkan.</p>
+            </div>
+            
+            <div class="total-box">
+                <span>Total:</span>
+                <span id="cart-total">Rp 0</span>
+            </div>
+
+            <button id="btn-kirim-wa" class="btn-wa" onclick="kirimSemuaPesananWA()" disabled>Pesan Sekarang via WhatsApp</button>
+        </div>
     </div>
 
     <script>
         const nomorWA = "6285776100168"; 
         let keranjang = [];
+        let jenisLayananPilihan = "";
+
+        // Pengecekan Jam Otomatis untuk Instant Delivery (17.00 - 01.00 WIB)
+        function cekJamOperasional() {
+            const sekarang = new Date();
+            const jam = sekarang.getHours(); // Format 0 - 23
+
+            const btnInstant = document.getElementById('btn-instant-delivery');
+            const notifInstant = document.getElementById('notif-instant');
+
+            // Jam 17 (5 sore) sampai Jam 01 (1 pagi)
+            // Artinya aktif jika: jam >= 17 ATAU jam < 1
+            const isOpen = (jam >= 17 || jam < 1);
+
+            if (!isOpen) {
+                btnInstant.disabled = true;
+                notifInstant.style.display = 'block';
+            } else {
+                btnInstant.disabled = false;
+                notifInstant.style.display = 'none';
+            }
+        }
+
+        // Jalankan pengecekan saat halaman dibuka
+        window.onload = function() {
+            cekJamOperasional();
+        };
+
+        function pilihLayanan(jenis) {
+            jenisLayananPilihan = jenis;
+            document.getElementById('txt-mode-aktif').innerText = `Mode: ${jenis}`;
+            
+            // Sembunyikan Home, Tampilkan Katalog
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('catalog-screen').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function kembaliKeHome() {
+            // Kembali ke halaman pilih layanan
+            document.getElementById('home-screen').style.display = 'block';
+            document.getElementById('catalog-screen').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
 
         function tambahKeKeranjang(namaProduk, idVarian, idQty, harga) {
             const varian = document.getElementById(idVarian).value;
@@ -103,7 +186,6 @@
             
             if (qty < 1 || isNaN(qty)) return;
 
-            // Tambahkan item ke array keranjang
             keranjang.push({
                 nama: namaProduk,
                 varian: varian,
@@ -155,7 +237,7 @@
         function kirimSemuaPesananWA() {
             if (keranjang.length === 0) return;
 
-            let teksPesanan = "Halo Moeder, saya mau pesan:\n";
+            let teksPesanan = `Halo Moeder, saya mau pesan dengan layanan *[ ${jenisLayananPilihan.toUpperCase()} ]*:\n\n`;
             let grandTotal = 0;
 
             keranjang.forEach((item, i) => {
