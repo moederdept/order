@@ -3,55 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Toko</title>
+    <title>Katalog Moeder</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background-color: #f4f4f4; padding: 15px; }
-        .header { text-align: center; margin-bottom: 20px; padding: 15px; background: #fff; border-radius: 8px; }
-        .card { background: #fff; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .card img { width: 100%; border-radius: 8px; object-fit: cover; aspect-ratio: 1/1; background: #eee; }
-        .card h3 { margin: 10px 0 5px; }
-        .card p { color: #666; font-size: 14px; margin-bottom: 10px; }
-        .card select, .card input { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px; }
-        .btn-wa { background: #25D366; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; text-align: center; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f8f9fa; padding: 15px; max-width: 500px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 20px; padding: 20px 15px; background: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .header h1 { font-size: 22px; color: #222; margin-bottom: 5px; }
+        .header p { color: #666; font-size: 13px; }
+        .card { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .card img { width: 100%; border-radius: 8px; object-fit: cover; aspect-ratio: 1/1; background: #e9ecef; margin-bottom: 12px; }
+        .card h3 { font-size: 18px; color: #333; margin-bottom: 4px; }
+        .price { color: #e40616; font-weight: bold; font-size: 16px; margin-bottom: 15px; }
+        label { font-size: 12px; font-weight: 600; color: #555; display: block; margin-bottom: 5px; }
+        .card select, .card input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background-color: #fff; }
+        .btn-wa { background: #25D366; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; text-align: center; }
+        .btn-wa:active { background: #1eb956; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Katalog Produk</h1>
-        <p>Pilih produk dan pesan langsung via WhatsApp</p>
+        <h1>Katalog Moeder</h1>
+        <p>Pilih produk dan langsung pesan via WhatsApp</p>
     </div>
 
-    <!-- CONTOH PRODUK 1 -->
+    <!-- PRODUK 1: PISTACHIO -->
     <div class="card">
-        <!-- Nanti gambar buatanmu dipanggil di sini -->
-        <img src="https://via.placeholder.com/300x300?text=Foto+Produk" alt="Butterscotch">
-        <h3>Butterscotch</h3>
-        <p>Rp 20.000</p>
+        <!-- Ganti 'pistachio.jpg' sesuai nama file gambar produkmu nanti -->
+        <img src="pistachio.jpg" alt="Pistachio" onerror="this.src='https://via.placeholder.com/400x400?text=Pistachio'">
+        <h3>Pistachio</h3>
+        <p class="price">Rp 15.000</p>
         
-        <label for="variant1">Varian / Sugar:</label>
-        <select id="variant1">
+        <label for="variant-pistachio">Varian / Sugar:</label>
+        <select id="variant-pistachio">
             <option value="Normal Sugar">Normal Sugar</option>
             <option value="Less Sugar">Less Sugar</option>
         </select>
 
-        <label for="qty1">Jumlah:</label>
-        <input type="number" id="qty1" value="1" min="1">
+        <label for="qty-pistachio">Jumlah:</label>
+        <input type="number" id="qty-pistachio" value="1" min="1">
 
-        <button class="btn-wa" onclick="pesanWa('Butterscotch', 'variant1', 'qty1')">Pesan via WA</button>
+        <button class="btn-wa" onclick="pesanWa('Pistachio', 'variant-pistachio', 'qty-pistachio', 15000)">Pesan via WA</button>
+    </div>
+
+    <!-- PRODUK 2: BUTTERSCOTCH -->
+    <div class="card">
+        <!-- Ganti 'butterscotch.jpg' sesuai nama file gambar produkmu nanti -->
+        <img src="butterscotch.jpg" alt="Butterscotch" onerror="this.src='https://via.placeholder.com/400x400?text=Butterscotch'">
+        <h3>Butterscotch</h3>
+        <p class="price">Rp 15.000</p>
+        
+        <label for="variant-butterscotch">Varian / Sugar:</label>
+        <select id="variant-butterscotch">
+            <option value="Normal Sugar">Normal Sugar</option>
+            <option value="Less Sugar">Less Sugar</option>
+        </select>
+
+        <label for="qty-butterscotch">Jumlah:</label>
+        <input type="number" id="qty-butterscotch" value="1" min="1">
+
+        <button class="btn-wa" onclick="pesanWa('Butterscotch', 'variant-butterscotch', 'qty-butterscotch', 15000)">Pesan via WA</button>
     </div>
 
     <script>
-        // MASUKKAN NOMOR HP WA KAMU DI SINI (Ganti 6285776100168)
         const nomorWA = "6285776100168"; 
 
-        function pesanWa(namaProduk, idVarian, idQty) {
+        function pesanWa(namaProduk, idVarian, idQty, harga) {
             const varian = document.getElementById(idVarian).value;
             const qty = document.getElementById(idQty).value;
+            const total = qty * harga;
             
-            // Format Pesan
-            const teks = `Halo, saya mau pesan ${namaProduk} ${qty} (${varian})`;
+            // Format Pesan WhatsApp
+            const teks = `Halo Moeder, saya mau pesan:\n- ${namaProduk} ${qty}x (${varian})\n\nTotal: Rp ${total.toLocaleString('id-ID')}`;
             
             // Buka link WhatsApp
             const url = `https://wa.me/${nomorWA}?text=${encodeURIComponent(teks)}`;
