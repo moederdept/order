@@ -6,30 +6,44 @@
     <title>Katalog Moeder</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f8f9fa; padding: 15px; max-width: 500px; margin: 0 auto; }
+        body { background-color: #f8f9fa; padding: 15px; max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
         .header { text-align: center; margin-bottom: 20px; padding: 20px 15px; background: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .header h1 { font-size: 22px; color: #222; margin-bottom: 5px; }
         .header p { color: #666; font-size: 13px; }
+        
         .card { background: #ffffff; border-radius: 12px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
         .card img { width: 100%; border-radius: 8px; object-fit: cover; aspect-ratio: 1/1; background: #e9ecef; margin-bottom: 12px; }
         .card h3 { font-size: 18px; color: #333; margin-bottom: 4px; }
         .price { color: #e40616; font-weight: bold; font-size: 16px; margin-bottom: 15px; }
         label { font-size: 12px; font-weight: 600; color: #555; display: block; margin-bottom: 5px; }
         .card select, .card input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; background-color: #fff; }
-        .btn-wa { background: #25D366; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; text-align: center; }
-        .btn-wa:active { background: #1eb956; }
+        
+        .btn-add { background: #222; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; text-align: center; }
+        .btn-add:active { background: #444; }
+
+        /* REKAP PESANAN / KERANJANG */
+        .cart-section { background: #ffffff; border-radius: 12px; padding: 15px; margin-top: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 2px solid #e40616; }
+        .cart-section h2 { font-size: 16px; margin-bottom: 10px; color: #222; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 8px 0; border-bottom: 1px dashed #eee; }
+        .cart-item-info { flex-grow: 1; }
+        .cart-item-title { font-weight: bold; color: #333; }
+        .cart-item-sub { color: #777; font-size: 11px; }
+        .btn-del { background: #ff4d4d; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; margin-left: 10px; }
+        .total-box { margin-top: 15px; font-weight: bold; font-size: 16px; display: flex; justify-content: space-between; color: #222; }
+        
+        .btn-wa { background: #25D366; color: white; border: none; padding: 14px; width: 100%; border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer; text-align: center; margin-top: 15px; }
+        .btn-wa:disabled { background: #ccc; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Katalog Moeder</h1>
-        <p>Pilih produk dan langsung pesan via WhatsApp</p>
+        <p>Pilih menu, tambah ke pesanan, dan checkout via WA</p>
     </div>
 
     <!-- PRODUK 1: PISTACHIO -->
     <div class="card">
-        <!-- Ganti 'pistachio.jpg' sesuai nama file gambar produkmu nanti -->
         <img src="pistachio.jpg" alt="Pistachio" onerror="this.src='https://via.placeholder.com/400x400?text=Pistachio'">
         <h3>Pistachio</h3>
         <p class="price">Rp 15.000</p>
@@ -43,12 +57,11 @@
         <label for="qty-pistachio">Jumlah:</label>
         <input type="number" id="qty-pistachio" value="1" min="1">
 
-        <button class="btn-wa" onclick="pesanWa('Pistachio', 'variant-pistachio', 'qty-pistachio', 15000)">Pesan via WA</button>
+        <button class="btn-add" onclick="tambahKeKeranjang('Pistachio', 'variant-pistachio', 'qty-pistachio', 15000)">+ Tambah Pesanan</button>
     </div>
 
     <!-- PRODUK 2: BUTTERSCOTCH -->
     <div class="card">
-        <!-- Ganti 'butterscotch.jpg' sesuai nama file gambar produkmu nanti -->
         <img src="butterscotch.jpg" alt="Butterscotch" onerror="this.src='https://via.placeholder.com/400x400?text=Butterscotch'">
         <h3>Butterscotch</h3>
         <p class="price">Rp 15.000</p>
@@ -62,22 +75,97 @@
         <label for="qty-butterscotch">Jumlah:</label>
         <input type="number" id="qty-butterscotch" value="1" min="1">
 
-        <button class="btn-wa" onclick="pesanWa('Butterscotch', 'variant-butterscotch', 'qty-butterscotch', 15000)">Pesan via WA</button>
+        <button class="btn-add" onclick="tambahKeKeranjang('Butterscotch', 'variant-butterscotch', 'qty-butterscotch', 15000)">+ Tambah Pesanan</button>
+    </div>
+
+    <!-- KOTAK REKAP PESANAN (KERANJANG) -->
+    <div class="cart-section">
+        <h2>Daftar Pesanan Kamu</h2>
+        <div id="cart-list">
+            <p style="font-size: 12px; color: #999; text-align: center; padding: 10px 0;">Belum ada menu yang ditambahkan.</p>
+        </div>
+        
+        <div class="total-box">
+            <span>Total:</span>
+            <span id="cart-total">Rp 0</span>
+        </div>
+
+        <button id="btn-kirim-wa" class="btn-wa" onclick="kirimSemuaPesananWA()" disabled>Pesan Sekarang via WhatsApp</button>
     </div>
 
     <script>
         const nomorWA = "6285776100168"; 
+        let keranjang = [];
 
-        function pesanWa(namaProduk, idVarian, idQty, harga) {
+        function tambahKeKeranjang(namaProduk, idVarian, idQty, harga) {
             const varian = document.getElementById(idVarian).value;
-            const qty = document.getElementById(idQty).value;
-            const total = qty * harga;
+            const qty = parseInt(document.getElementById(idQty).value);
             
-            // Format Pesan WhatsApp
-            const teks = `Halo Moeder, saya mau pesan:\n- ${namaProduk} ${qty}x (${varian})\n\nTotal: Rp ${total.toLocaleString('id-ID')}`;
-            
-            // Buka link WhatsApp
-            const url = `https://wa.me/${nomorWA}?text=${encodeURIComponent(teks)}`;
+            if (qty < 1 || isNaN(qty)) return;
+
+            // Tambahkan item ke array keranjang
+            keranjang.push({
+                nama: namaProduk,
+                varian: varian,
+                qty: qty,
+                hargaTotal: qty * harga
+            });
+
+            updateTampilanKeranjang();
+        }
+
+        function hapusItem(index) {
+            keranjang.splice(index, 1);
+            updateTampilanKeranjang();
+        }
+
+        function updateTampilanKeranjang() {
+            const cartList = document.getElementById('cart-list');
+            const cartTotal = document.getElementById('cart-total');
+            const btnWA = document.getElementById('btn-kirim-wa');
+
+            if (keranjang.length === 0) {
+                cartList.innerHTML = '<p style="font-size: 12px; color: #999; text-align: center; padding: 10px 0;">Belum ada menu yang ditambahkan.</p>';
+                cartTotal.innerText = 'Rp 0';
+                btnWA.disabled = true;
+                return;
+            }
+
+            let html = '';
+            let grandTotal = 0;
+
+            keranjang.forEach((item, index) => {
+                grandTotal += item.hargaTotal;
+                html += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-title">${item.nama} (${item.qty}x)</div>
+                            <div class="cart-item-sub">${item.varian} - Rp ${item.hargaTotal.toLocaleString('id-ID')}</div>
+                        </div>
+                        <button class="btn-del" onclick="hapusItem(${index})">Hapus</button>
+                    </div>
+                `;
+            });
+
+            cartList.innerHTML = html;
+            cartTotal.innerText = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+            btnWA.disabled = false;
+        }
+
+        function kirimSemuaPesananWA() {
+            if (keranjang.length === 0) return;
+
+            let teksPesanan = "Halo Moeder, saya mau pesan:\n";
+            let grandTotal = 0;
+
+            keranjang.forEach((item, i) => {
+                teksPesanan += `${i + 1}. ${item.nama} (${item.qty}x) - ${item.varian}\n`;
+                grandTotal += item.hargaTotal;
+            });
+
+            teksPesanan += `\nTotal: Rp ${grandTotal.toLocaleString('id-ID')}`;
+
+            const url = `https://wa.me/${nomorWA}?text=${encodeURIComponent(teksPesanan)}`;
             window.open(url, '_blank');
         }
     </script>
